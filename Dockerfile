@@ -22,7 +22,7 @@ RUN cp fretraj/src/fretraj/fretraj_gui.py /src/pymol/share/pymol/data/startup/fr
 RUN cp fretraj/src/fretraj/__init__.py /src/pymol/share/pymol/data/startup/fretraj
 ADD plugin /src/plugin
 ADD license.lic /src/pymol/share/pymol
-COPY plugin /src/pymol/share/pymol/data/startup/plugin/
+RUN cp -r /src/plugin /src/pymol/share/pymol/data/startup/plugin/
 
 ## FROM ubuntu:22.04
 #FROM continuumio/anaconda3
