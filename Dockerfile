@@ -1,6 +1,7 @@
-FROM ubuntu:22.04
+FROM ubuntu:20.04
 
 LABEL maintainer="Mirko Weber, M.Sc. <weber7@hs-mittweida.de>"
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends wget \
     ca-certificates \
@@ -8,6 +9,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends wget \
     ffmpeg \
     libsm6 \
     libxext6 \
+    python3 \
+    pip \
     git
 
 WORKDIR /src
@@ -16,7 +19,7 @@ RUN tar -jxf ./PyMOL-2.5.4_404-Linux-x86_64-py37.tar.bz2
 RUN git clone https://github.com/felixErichson/pymol_RNAvis.git
 RUN cp -r pymol_RNAvis /src/pymol/share/pymol/data/startup/pymol_RNAvis/
 RUN git clone https://github.com/RNA-FRETools/fretlabel.git
-RUN cp -r fretlabel/src/fretlabel /src/pymol/share/pymol/data/startup/fretlabel/
+RUN cp -r fretlabel /src/pymol/share/pymol/data/startup/fretlabel/
 RUN git clone https://github.com/RNA-FRETools/fretraj.git
 RUN cp fretraj/src/fretraj/fretraj_gui.py /src/pymol/share/pymol/data/startup/fretraj
 RUN cp fretraj/src/fretraj/__init__.py /src/pymol/share/pymol/data/startup/fretraj
