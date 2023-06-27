@@ -2,23 +2,29 @@ FROM ubuntu:20.04
 
 LABEL maintainer="Mirko Weber, M.Sc. <weber7@hs-mittweida.de>"
 ENV DEBIAN_FRONTEND=noninteractive
-ENV package_dir /usr/local/lib/python3.9/dist-packages/fretlabel
+ENV fretlabel_dir /usr/local/lib/python3.8/dist-packages/fretlabel
+ENV fretraj_dir /usr/local/lib/python3.8/dist-packages/fretraj
 
-RUN apt-get update &&  \
-    apt-get install -y --no-install-recommends pymol pip git && \
-    python3 -m pip install pip && \
-    rm -rf /var/lib/apt/lists/* && \
-    pip install fretlabel
-    #&& \ cp "$package_dir"/fretlabel_gui.py /usr/lib/python3/dist-packages/pmg_tk/startup
+ADD plugin /src/plugin
 
-WORKDIR /src
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends pymol pip git python3-dev gcc g++ gfortran python3-tk && \
+    pip install fretraj && \
+    cp "$fretraj_dir"/fretraj_gui.py /usr/lib/python3/dist-packages/pmg_tk/startup && \
+    pip install fretlabel && \
+    cp "$fretlabel_dir"/fretlabel_gui.py /usr/lib/python3/dist-packages/pmg_tk/startup && \
+    # cd /src && \
+    # git clone https://github.com/RNA-FRETools/fretraj.git && \
+    # cd fretraj && \
+    cp -r /src/plugin /usr/lib/python3/dist-packages/pmg_tk/startup
+
 # RUN wget https://pymol.org/installers/PyMOL-2.5.4_404-Linux-x86_64-py37.tar.bz2
 # RUN tar -jxf ./PyMOL-2.5.4_404-Linux-x86_64-py37.tar.bz2
-RUN git clone https://github.com/felixErichson/pymol_RNAvis.git
+# RUN git clone https://github.com/felixErichson/pymol_RNAvis.git
 # RUN cp -r pymol_RNAvis /src/pymol/share/pymol/data/startup/pymol_RNAvis/
-RUN git clone https://github.com/RNA-FRETools/fretlabel.git
+# RUN git clone https://github.com/RNA-FRETools/fretlabel.git
 # RUN cp -r fretlabel /src/pymol/share/pymol/data/startup/fretlabel/
-RUN git clone https://github.com/RNA-FRETools/fretraj.git
+# RUN git clone https://github.com/RNA-FRETools/fretraj.git
 # RUN cp fretraj/src/fretraj/fretraj_gui.py /src/pymol/share/pymol/data/startup/fretraj
 # RUN cp fretraj/src/fretraj/__init__.py /src/pymol/share/pymol/data/startup/fretraj
 # ADD plugin /src/plugin
