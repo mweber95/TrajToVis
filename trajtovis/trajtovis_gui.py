@@ -1,10 +1,49 @@
-class LogicForGui:
-    def __init__(self):
-        self.resi_list = []
+import pathlib
+import os
 
-    def add_logic(self, form):
-        form.addButton.clicked.connect(self.add_resi)
-        form.pushButton.clicked.connect(self.visualize)
+try:
+    from pymol import cmd
+    from pymol.Qt import QtWidgets, utils, QtCore
+except ModuleNotFoundError:
+    print("Pymol is not installed.")
+
+# global reference to avoid garbage collection of our dialog
+dialog = None
+
+def __init_plugin__(app=None):
+    from pymol.plugins import addmenuitemqt
+    addmenuitemqt('TrajToVis', run_plugin_gui)
+
+
+def run_plugin_gui():
+    """
+    Create the GUI Window
+    """
+    global dialog
+    if dialog is None:
+        dialog = App(_pymol_running=True)
+
+    dialog.show()
+
+
+def make_dialog():
+    add_dialog = QtWidgets.QDialog()
+    ui_file = os.path.join(os.path.dirname(__file__), 'trajtovis.ui')
+    form = loadUi(ui_file, add_dialog)
+    #form.pushButton.clicked.connect(visualize)
+    LogicForGui().add_logic(form)
+    return add_dialog
+
+
+class App(QtWidgets.QWidget):
+    def __init__(self, _pymol_running=False, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        trajtovis_ui = str(pathlib.Path(__file__).parent.joinpath('trajtovis.ui'))
+        utils.loadUi(trajtovis_ui, self)
+
+        # add gui elements logic
+        # self.addButton.clicked.connect(self.add_resi)
+        self.pushButton.clicked.connect(self.visualize)
 
     def add_resi(self):
         current = []
@@ -16,7 +55,7 @@ class LogicForGui:
 
     def visualize(self):
         cmd.load("/usr/local/lib/python3.8/dist-packages/trajtovis/KLTL_res_traj.pdb")
-        #self.structure_coloring()
+        LogicForGui.structure_coloring()
         #self.fancy_coloring()
 
     def fancy_coloring(self):

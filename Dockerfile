@@ -18,7 +18,7 @@ RUN apt-get update && \
     cp "$fretlabel_dir"/fretlabel_gui.py /usr/lib/python3/dist-packages/pmg_tk/startup
 
 ADD trajtovis /src/trajtovis
-ADD trajtovis_gui.py /src
-ADD trajtovis.ui /src
+# ADD trajtovis/trajtovis_gui.py /src
+# ADD trajtovis/trajtovis.ui /src
 RUN cp -r /src/trajtovis "$trajtovis_dir"
-RUN cp /src/trajtovis_gui.py /src/trajtovis.ui /usr/lib/python3/dist-packages/pmg_tk/startup
+RUN cp /src/trajtovis/trajtovis_gui.py /src/trajtovis/trajtovis.ui /usr/lib/python3/dist-packages/pmg_tk/startup
