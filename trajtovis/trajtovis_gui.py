@@ -1,6 +1,8 @@
 import pathlib
+import numpy as np
 import os
 import trajtovis
+
 
 try:
     from pymol import cmd
@@ -34,6 +36,7 @@ class App(QtWidgets.QWidget):
         self.align_core: list = []
         self.pdbText = None
         self.file_name_pdb: str = ''
+        self.split_object_name: str = ''
         module_dir: pathlib.Path = pathlib.Path(__file__).parent
         trajtovis_ui: str = str(module_dir.joinpath('trajtovis.ui'))
         pdb_show_ui: str = str(module_dir.joinpath('pdb_show.ui'))
@@ -45,23 +48,22 @@ class App(QtWidgets.QWidget):
         # initialize form element states
         self.show_pdb.setEnabled(False)
         self.visualisation.setEnabled(False)
+        self.align.setEnabled(False)
+        self.rejoin_split_states.setEnabled(False)
 
         # add gui elements logic
         self.load_pdb.clicked.connect(self.load_pdb_button)
         self.show_pdb.clicked.connect(self.show_pdb_file)
         self.visualisation.clicked.connect(self.visualise)
         self.core_visualisation_selection.clicked.connect(self.add_core_visualisation_selection)
-        # self.align_core.clicked.connect(self.align_core_on_selection)
-        # self.core_align_selection.clicked.connect(self.add_core_visualisation_selection)
+        self.align.clicked.connect(self.align_core_on_selection)
+        self.core_align_selection.clicked.connect(self.add_core_align_selection)
+        self.rejoin_split_states.clicked.connect(self.rejoin_split)
 
 
     def load_pdb_button(self):
         """
         Load PDB or CIF file
-
-        Parameters
-        ----------
-        file_name_path_pdb : str
         """
         self.file_name_path_pdb, _ = QtWidgets.QFileDialog.getOpenFileName(
                 self, "Load PDB / CIF", "", "PDB / CIF file (*.pdb *cif);;All Files (*)"
@@ -100,9 +102,15 @@ class App(QtWidgets.QWidget):
             cmd.set("cartoon_ring_mode", "3", "contact")
             cmd.color("hotpink", "contact")
             self.visualisation_core.clear()
+        self.visualise_backbone()
+        self.visualise_dyes()
+
+    def visualise_backbone(self):
         if self.check_backbone.isChecked():
             cmd.set("cartoon_nucleic_acid_color", "gray")
             cmd.set("cartoon_ladder_color", "my_blue")
+
+    def visualise_dyes(self):
         if self.check_cy3.isChecked() or self.check_cy5.isChecked():
             cmd.select("dye_bases", "resn RUM+RGO")
             cmd.set("cartoon_ring_mode", "3", "dye_bases")
@@ -118,8 +126,6 @@ class App(QtWidgets.QWidget):
                 cmd.color("acc_cy5_red", "d_cy5")
                 cmd.set("cartoon_ladder_color", "acc_cy5_red", "d_cy5")
             cmd.set("cartoon_ring_transparency", "0.7")
-
-
     @staticmethod
     def visualisation_parameters():
         cmd.bg_color("white")
@@ -135,31 +141,46 @@ class App(QtWidgets.QWidget):
 
     def align_core_on_selection(self):
         if self.align_core:
-            pass
-
+            if self.fancy_visualisation.isChecked():
+                self.visualisation_parameters()
+                self.visualise_backbone()
+                self.visualise_dyes()
+                cmd.show("ribbon")
+                cmd.set("ribbon_sampling", "20")
+                cmd.set("ribbon_color", "gray")
+                cmd.set("ribbon_transparency", "0.7")
+                cmd.hide("cartoon")
+                cmd.select("resn C5W and name C32")
+                cmd.show("sphere", "sele")
+                cmd.select("resn C3W and name C11")
+                cmd.show("sphere", "sele")
+                cmd.set("sphere_scale", "0.5")
+                cmd.hide("sticks")
+            resis: str = self.get_core()
+            self.split_object_name = str(pathlib.Path(self.file_name_pdb).stem)
+            cmd.split_states(self.split_object_name, "1", "100")
+            cmd.select(f"{self.split_object_name}_0001 and {resis}")
+            cmd.create("core", "sele")
+            self.aligner(f"{self.split_object_name}_", "core", [1, 101])
+            cmd.show("cartoon", f"{self.split_object_name}_0001")
+        self.rejoin_split_states.setEnabled(True)
     def add_core_align_selection(self):
         start = self.core_align_start.value()
         end = self.core_align_end.value()
         self.align_core.append((start, end))
+        if self.align_core:
+            self.align.setEnabled(True)
 
-    def fancy_coloring(self):
-        cmd.show("ribbon")
-        cmd.set("ribbon_sampling", "20")
-        cmd.set("ribbon_color", "gray")
-        cmd.set("ribbon_transparency", "0.7")
-        cmd.hide("cartoon")
-        cmd.select("resn C5W and name C32")
-        cmd.show("sphere", "sele")
-        cmd.select("resn C3W and name C11")
-        cmd.show("sphere", "sele")
-        cmd.set("sphere_scale", "0.5")
-        cmd.hide("sticks")
-        cmd.split_states("KLTL_res_traj", "1", "100")
-        cmd.select("KLTL_res_traj_0001 and resi 26-31+55-60")
-        cmd.create("core", "sele")
-        self.aligner("KLTL_res_traj_", "core", [1, 101])
-        cmd.show("cartoon", "KLTL_res_traj_0001")
+    def get_core(self):
+        align_selection = 'resi '
+        for pair in self.align_core:
+            align_selection = f'{align_selection}{pair[0]}-{pair[1]}+'
+        return align_selection[:-1]
 
-    def aligner(self, name, core, model_range):
+    def rejoin_split(self):
+        cmd.join_states(f'{self.split_object_name}_combined', f'{self.split_object_name}_*')
+
+    @staticmethod
+    def aligner(name, core, model_range):
         for i in np.arange(model_range[0], model_range[1]):
             cmd.align(f"{name}{'{:04d}'.format(i)}", core)

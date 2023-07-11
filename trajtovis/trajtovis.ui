@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>TrajToVis</string>
   </property>
   <widget class="QWidget" name="centralwidget" native="true">
    <property name="geometry">
@@ -22,7 +22,7 @@
      <height>460</height>
     </rect>
    </property>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="line_current_pdb">
     <property name="geometry">
      <rect>
       <x>135</x>
@@ -246,7 +246,7 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="align">
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -281,7 +281,7 @@
     <property name="title">
      <string>Align Trajectory on Core Region</string>
     </property>
-    <widget class="QPushButton" name="pushButton_7">
+    <widget class="QPushButton" name="core_align_selection">
      <property name="geometry">
       <rect>
        <x>15</x>
@@ -294,7 +294,7 @@
       <string>Add Selection</string>
      </property>
     </widget>
-    <widget class="QSpinBox" name="spinBox_5">
+    <widget class="QSpinBox" name="core_align_start">
      <property name="geometry">
       <rect>
        <x>15</x>
@@ -304,7 +304,7 @@
       </rect>
      </property>
     </widget>
-    <widget class="QSpinBox" name="spinBox_6">
+    <widget class="QSpinBox" name="core_align_end">
      <property name="geometry">
       <rect>
        <x>110</x>
@@ -340,7 +340,7 @@
       <string>To</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="checkBox_4">
+    <widget class="QCheckBox" name="fancy_visualisation">
      <property name="geometry">
       <rect>
        <x>15</x>
@@ -354,7 +354,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QPushButton" name="pushButton_8">
+   <widget class="QPushButton" name="rejoin_split_states">
     <property name="geometry">
      <rect>
       <x>250</x>
