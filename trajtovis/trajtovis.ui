@@ -77,7 +77,7 @@
     <property name="title">
      <string>Visualisation Parameters</string>
     </property>
-    <widget class="QCheckBox" name="checkBox_3">
+    <widget class="QCheckBox" name="check_backbone">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -90,7 +90,7 @@
       <string>Backbone</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="checkBox">
+    <widget class="QCheckBox" name="check_cy3">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -103,7 +103,7 @@
       <string>Cy3</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="checkBox_2">
+    <widget class="QCheckBox" name="check_cy5">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -117,7 +117,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QPushButton" name="pushButton_6">
+   <widget class="QPushButton" name="visualisation">
     <property name="geometry">
      <rect>
       <x>25</x>
@@ -152,7 +152,7 @@
     <property name="title">
      <string>Visualisation of Core Region</string>
     </property>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="core_visualisation_selection">
      <property name="geometry">
       <rect>
        <x>15</x>
@@ -165,7 +165,7 @@
       <string>Add Selection</string>
      </property>
     </widget>
-    <widget class="QSpinBox" name="spinBox">
+    <widget class="QSpinBox" name="core_visualisation_start">
      <property name="geometry">
       <rect>
        <x>15</x>
@@ -175,7 +175,7 @@
       </rect>
      </property>
     </widget>
-    <widget class="QSpinBox" name="spinBox_2">
+    <widget class="QSpinBox" name="core_visualisation_end">
      <property name="geometry">
       <rect>
        <x>110</x>
