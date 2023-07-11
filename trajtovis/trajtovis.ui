@@ -13,8 +13,16 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <widget class="QLineEdit" name="line_current_pdb">
+  <widget class="QWidget" name="centralwidget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>480</width>
+     <height>460</height>
+    </rect>
+   </property>
+   <widget class="QLineEdit" name="lineEdit">
     <property name="geometry">
      <rect>
       <x>135</x>
@@ -244,7 +252,7 @@
       <x>250</x>
       <y>285</y>
       <width>205</width>
-      <height>55</height>
+      <height>65</height>
      </rect>
     </property>
     <property name="font">
@@ -253,7 +261,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Align split States on Core</string>
+     <string>Align on Core</string>
     </property>
    </widget>
    <widget class="QGroupBox" name="groupBox_3">
@@ -262,7 +270,7 @@
       <x>25</x>
       <y>285</y>
       <width>205</width>
-      <height>120</height>
+      <height>150</height>
      </rect>
     </property>
     <property name="font">
@@ -332,14 +340,27 @@
       <string>To</string>
      </property>
     </widget>
+    <widget class="QCheckBox" name="checkBox_4">
+     <property name="geometry">
+      <rect>
+       <x>15</x>
+       <y>120</y>
+       <width>170</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Fancy image</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QPushButton" name="pushButton_8">
     <property name="geometry">
      <rect>
       <x>250</x>
-      <y>350</y>
+      <y>370</y>
       <width>205</width>
-      <height>55</height>
+      <height>65</height>
      </rect>
     </property>
     <property name="font">
@@ -362,7 +383,16 @@
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>3</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

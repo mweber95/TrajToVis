@@ -31,6 +31,7 @@ class App(QtWidgets.QWidget):
     def __init__(self, _pymol_running=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.visualisation_core: list = []
+        self.align_core: list = []
         self.pdbText = None
         self.file_name_pdb: str = ''
         module_dir: pathlib.Path = pathlib.Path(__file__).parent
@@ -50,6 +51,8 @@ class App(QtWidgets.QWidget):
         self.show_pdb.clicked.connect(self.show_pdb_file)
         self.visualisation.clicked.connect(self.visualise)
         self.core_visualisation_selection.clicked.connect(self.add_core_visualisation_selection)
+        # self.align_core.clicked.connect(self.align_core_on_selection)
+        # self.core_align_selection.clicked.connect(self.add_core_visualisation_selection)
 
 
     def load_pdb_button(self):
@@ -81,14 +84,6 @@ class App(QtWidgets.QWidget):
             self.textWindow.setWindowTitle(f'{self.file_name_pdb}')
             _ = self.textWindow.exec_()
 
-    def add_resi(self):
-        current = []
-        start = self.start_resi.value()
-        end = self.end_resi.value()
-        current.append(start)
-        current.append(end)
-        self.visualisation_core.append(current)
-
     def visualise(self):
         if self.check_backbone.isChecked() or \
                 self.visualisation_core or \
@@ -96,9 +91,9 @@ class App(QtWidgets.QWidget):
                 self.check_cy5.isChecked():
             self.visualisation_parameters()
         if self.visualisation_core:
-            resi_selection = 'resi'
+            resi_selection = 'resi '
             for pair in self.visualisation_core:
-                resi_selection = f'{resi_selection} {pair[0]}-{pair[1]}+'
+                resi_selection = f'{resi_selection}{pair[0]}-{pair[1]}+'
             resi_selection = resi_selection[:-1]
             cmd.select("contact", resi_selection)
             cmd.set("cartoon_ladder_color", "hotpink", "contact")
@@ -137,6 +132,15 @@ class App(QtWidgets.QWidget):
         start = self.core_visualisation_start.value()
         end = self.core_visualisation_end.value()
         self.visualisation_core.append((start, end))
+
+    def align_core_on_selection(self):
+        if self.align_core:
+            pass
+
+    def add_core_align_selection(self):
+        start = self.core_align_start.value()
+        end = self.core_align_end.value()
+        self.align_core.append((start, end))
 
     def fancy_coloring(self):
         cmd.show("ribbon")
