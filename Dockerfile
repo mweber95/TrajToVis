@@ -21,4 +21,5 @@ ADD trajtovis /src/trajtovis
 # ADD trajtovis/trajtovis_gui.py /src
 # ADD trajtovis/trajtovis.ui /src
 RUN cp -r /src/trajtovis "$trajtovis_dir"
-RUN cp /src/trajtovis/trajtovis_gui.py /src/trajtovis/trajtovis.ui /usr/lib/python3/dist-packages/pmg_tk/startup
+RUN cp /src/trajtovis/trajtovis_gui.py /src/trajtovis/trajtovis.ui /src/trajtovis/pdb_show.ui\
+    /usr/lib/python3/dist-packages/pmg_tk/startup
