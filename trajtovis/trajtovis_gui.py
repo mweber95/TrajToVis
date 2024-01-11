@@ -34,6 +34,7 @@ class App(QtWidgets.QWidget):
         super().__init__(*args, **kwargs)
         self.visualisation_core: list = []
         self.align_core: list = []
+        self.split_states_list: list = []
         self.pdbText = None
         self.file_name_pdb: str = ''
         self.split_object_name: str = ''
@@ -58,6 +59,7 @@ class App(QtWidgets.QWidget):
         self.core_visualisation_selection.clicked.connect(self.add_core_visualisation_selection)
         self.align.clicked.connect(self.align_core_on_selection)
         self.core_align_selection.clicked.connect(self.add_core_align_selection)
+        self.split_states_selection.clicked.connect(self.add_split_states_selection)
         self.rejoin_split_states.clicked.connect(self.rejoin_split)
 
 
@@ -158,18 +160,31 @@ class App(QtWidgets.QWidget):
                 cmd.hide("sticks")
             resis: str = self.get_core()
             self.split_object_name = str(pathlib.Path(self.file_name_pdb).stem)
-            cmd.split_states(self.split_object_name, "1", "100")
+            if self.split_states_list:
+                cmd.split_states(self.split_object_name,
+                                 f"{self.split_states_list[-1][0]}",
+                                 f"{self.split_states_list[-1][1]}")
+            else:
+                cmd.split_states(self.split_object_name, "1", "100")
             cmd.select(f"{self.split_object_name}_0001 and {resis}")
             cmd.create("core", "sele")
-            self.aligner(f"{self.split_object_name}_", "core", [1, 101])
+            self.aligner(f"{self.split_object_name}_",
+                         "core",
+                         [int(self.split_states_list[-1][0])+1, int(self.split_states_list[-1][1])+1])
             cmd.show("cartoon", f"{self.split_object_name}_0001")
         self.rejoin_split_states.setEnabled(True)
+
     def add_core_align_selection(self):
         start = self.core_align_start.value()
         end = self.core_align_end.value()
         self.align_core.append((start, end))
         if self.align_core:
             self.align.setEnabled(True)
+
+    def add_split_states_selection(self):
+        start = self.split_states_start.value()
+        end = self.split_states_end.value()
+        self.split_states_list.append((start, end))
 
     def get_core(self):
         align_selection = 'resi '
