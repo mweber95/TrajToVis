@@ -39,7 +39,7 @@ class App(QtWidgets.QWidget):
         self.file_name_pdb: str = ''
         self.split_object_name: str = ''
         module_dir: pathlib.Path = pathlib.Path(__file__).parent
-        trajtovis_ui: str = str(module_dir.joinpath('trajtovis.ui'))
+        trajtovis_ui: str = str(module_dir.joinpath('broccoli.ui'))
         pdb_show_ui: str = str(module_dir.joinpath('pdb_show.ui'))
         utils.loadUi(trajtovis_ui, self)
         self.textWindow = QtWidgets.QDialog(self)
@@ -51,6 +51,7 @@ class App(QtWidgets.QWidget):
         self.visualisation.setEnabled(False)
         self.align.setEnabled(False)
         self.rejoin_split_states.setEnabled(False)
+        self.broccoli.setEnabled(False)
 
         # add gui elements logic
         self.load_pdb.clicked.connect(self.load_pdb_button)
@@ -61,6 +62,7 @@ class App(QtWidgets.QWidget):
         self.core_align_selection.clicked.connect(self.add_core_align_selection)
         self.split_states_selection.clicked.connect(self.add_split_states_selection)
         self.rejoin_split_states.clicked.connect(self.rejoin_split)
+        self.broccoli.clicked.connect(self.visualise_broccoli)
 
 
     def load_pdb_button(self):
@@ -174,6 +176,11 @@ class App(QtWidgets.QWidget):
             cmd.show("cartoon", f"{self.split_object_name}_0001")
         self.rejoin_split_states.setEnabled(True)
 
+    def visualise_broccoli(self):
+        cmd.save("../tmp/all_aligned_states.pdb", f"{self.split_object_name}_combined", states=0)
+        cmd.delete(f'{self.split_object_name}_0*')
+
+
     def add_core_align_selection(self):
         start = self.core_align_start.value()
         end = self.core_align_end.value()
@@ -194,6 +201,7 @@ class App(QtWidgets.QWidget):
 
     def rejoin_split(self):
         cmd.join_states(f'{self.split_object_name}_combined', f'{self.split_object_name}_*')
+        self.broccoli.setEnabled(True)
 
     @staticmethod
     def aligner(name, core, model_range):
