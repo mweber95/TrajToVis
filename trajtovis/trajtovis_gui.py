@@ -177,7 +177,7 @@ class App(QtWidgets.QWidget):
         self.rejoin_split_states.setEnabled(True)
 
     def visualise_broccoli(self):
-        cmd.save("../tmp/all_aligned_states.pdb", f"{self.split_object_name}_combined", states=0)
+        cmd.save("../tmp/all_aligned_states.pdb", f"{self.split_object_name}_combined", state=0)
         cmd.delete(f'{self.split_object_name}_0*')
 
 
